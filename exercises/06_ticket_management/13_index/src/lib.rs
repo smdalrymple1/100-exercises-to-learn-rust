@@ -58,6 +58,27 @@ impl TicketStore {
     }
 }
 
+impl std::ops::Index<&TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, index: &TicketId) -> &Ticket {
+        self.index(*index)
+    }
+}
+
+impl std::ops::Index<TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, index: TicketId) -> &Ticket {
+        match self.get(index) {
+            None => panic!("Cannot find ticket {}", index.0),
+            Some(ticket) => ticket
+        }
+    }
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use crate::{Status, TicketDraft, TicketStore};

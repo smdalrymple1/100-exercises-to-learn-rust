@@ -36,6 +36,15 @@ impl TicketStore {
     }
 }
 
+impl<'a> IntoIterator for &'a TicketStore {
+    type Item = &'a Ticket;
+    type IntoIter = std::slice::Iter<'a, Ticket>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.tickets.iter()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -60,7 +69,7 @@ mod tests {
         store.add_ticket(ticket);
 
         let tickets: Vec<&Ticket> = store.iter().collect();
-        let tickets2: Vec<&Ticket> = (&store).into_iter().collect();
+        let tickets2: Vec<&Ticket> = tickets_ref_1.into_iter().collect();
         assert_eq!(tickets, tickets2);
     }
 }
